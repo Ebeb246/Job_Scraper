@@ -8,7 +8,7 @@ on a small Vue dashboard. Runs entirely with Docker Compose.
 
 ## Run it
 
-Requires Docker. Two commands:
+Requires Docker.
 
 ```bash
 docker compose up --build
@@ -31,11 +31,11 @@ Re-running is safe — jobs are deduplicated on the source's id.
 
 ## API
 
-| Method | Endpoint  | Description |
-|--------|-----------|-------------|
+| Method | Endpoint  | Description                                                                     |
+| ------ | --------- | ------------------------------------------------------------------------------- |
 | `POST` | `/scrape` | Fetch from RemoteOK and store new jobs. Returns `{fetched, inserted, skipped}`. |
-| `GET`  | `/jobs`   | All stored jobs. Filters: `?keyword=python`, `?company=stripe`. |
-| `GET`  | `/stats`  | Totals: job count, top 5 tags, jobs per day. |
+| `GET`  | `/jobs`   | All stored jobs. Filters: `?keyword=python`, `?company=stripe`.                 |
+| `GET`  | `/stats`  | Totals: job count, top 5 tags, jobs per day.                                    |
 
 Interactive docs: http://localhost:8001/docs
 
