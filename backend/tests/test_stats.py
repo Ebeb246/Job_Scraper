@@ -1,8 +1,6 @@
 """Integration test for the /stats endpoint against a real MySQL database.
 
-Requires DATABASE_URL to point at a running MySQL (compose locally, service
-container in CI). The TestClient context manager runs the app lifespan, which
-creates the tables. No SQLite involved.
+Requires DATABASE_URL to point at a running MySQL database
 """
 
 from fastapi.testclient import TestClient

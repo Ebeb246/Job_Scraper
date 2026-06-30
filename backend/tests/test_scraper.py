@@ -25,7 +25,7 @@ def _raw_job(**overrides):
 def test_parse_job_maps_fields():
     result = parse_job(_raw_job())
     assert result == {
-        "remoteok_id": "123",  # coerced to str
+        "remoteok_id": "123",
         "title": "Backend Engineer",
         "company": "Acme",
         "location": "Remote",
@@ -42,11 +42,14 @@ def test_parse_job_missing_required_field_returns_none():
 
 
 def test_parse_job_empty_location_becomes_none():
-    assert parse_job(_raw_job(location=""))["location"] is None
+    result = parse_job(_raw_job(location=""))
+    assert result is not None
+    assert result["location"] is None
 
 
 def test_parse_job_filters_non_string_tags():
     result = parse_job(_raw_job(tags=["python", 42, None, "api"]))
+    assert result is not None
     assert result["tags"] == ["python", "api"]
 
 
@@ -64,7 +67,7 @@ def test_parse_jobs_drops_invalid_entries():
 
 
 def test_fetch_raw_jobs_drops_metadata_row(monkeypatch):
-    # RemoteOK returns the legal/metadata notice as the FIRST element.
+    # RemoteOK returns the legal/metadata notice as the first element.
     payload = [
         {"legal": "RemoteOK API notice"},  # index 0 — must be dropped
         _raw_job(id=1),
