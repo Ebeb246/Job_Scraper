@@ -1,0 +1,58 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: jobs-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: jobs_db
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
+    ports:
+      - "3306:3306"
+    command:
+      [
+        "mysqld",
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_unicode_ci",
+      ]
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h 127.0.0.1 -uapp_user -papp_password --silent",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: jobs-backend
+    environment:
+      DATABASE_URL: mysql+pymysql://app_user:app_password@db:3306/jobs_db
+      JOB_SOURCE_URL: https://remoteok.com/api
+      CORS_ORIGINS: http://localhost:8000
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8001:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: /api
+    container_name: jobs-frontend
+    depends_on:
+      - backend
+    ports:
+      - "8000:80"
+
+volumes:
+  mysql_data:
